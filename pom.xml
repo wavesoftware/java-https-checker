@@ -146,17 +146,6 @@
                                     </mapper>
                                 </data>
 
-                                <data>
-                                    <src>${basedir}/src/deb/init.d</src>
-                                    <type>directory</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/etc/init.d</prefix>
-                                        <user>loader</user>
-                                        <group>loader</group>
-                                    </mapper>
-                                </data>
-
                             </dataSet>
                         </configuration>
                     </execution>
