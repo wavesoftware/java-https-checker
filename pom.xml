@@ -8,7 +8,7 @@
     </parent>
     <groupId>pl.wavesoftware.utils</groupId>
     <artifactId>https-checker</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.8.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 	
     <name>HTTP/S Java Checker</name>
@@ -136,6 +136,20 @@
                                 <include>pl/wavesoftware/**</include>
                             </includes>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eluder.coveralls</groupId>
+                        <artifactId>coveralls-maven-plugin</artifactId>
+                        <version>2.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>coveralls-default</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jacoco</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
