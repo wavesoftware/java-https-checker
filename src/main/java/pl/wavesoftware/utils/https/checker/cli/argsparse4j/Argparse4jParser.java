@@ -55,6 +55,7 @@ public class Argparse4jParser implements ArgsParser<ArgumentParser> {
 
             private void addQuiet(ArgumentParser parser, Arguments argument) {
                 parser.addArgument(argument.config)
+                    .action(net.sourceforge.argparse4j.impl.Arguments.storeTrue())
                     .setDefault(argument.defaultValue)
                     .type(argument.type)
                     .help(argument.help);

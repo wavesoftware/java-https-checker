@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
  */
 public abstract class Cli {
 
-    public static final String APP_NAME = "HttpsChecker";
+    public static final String APP_NAME = "jhttps-checker";
 
     public static final String DESCRIPTION = "It can check is your Java installation can perform connection "
         + "with given HTTPS address";

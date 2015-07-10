@@ -35,17 +35,17 @@ public class HttpsCheckerMainTest {
         assertNotNull(args);
         assertEquals(0, result.retcode());
 
-        args = new String[]{"-q", "true", GOOGLE};
+        args = new String[]{"-q", GOOGLE};
         result = HttpsCheckerMain.doMain(args);
         assertNotNull(args);
         assertEquals(0, result.retcode());
 
-        args = new String[]{"-q", "false", "--max_redirects", "3", GOOGLE};
+        args = new String[]{"-q", "-r", "3", GOOGLE};
         result = HttpsCheckerMain.doMain(args);
         assertNotNull(args);
         assertEquals(0, result.retcode());
 
-        args = new String[]{"-quoa!", "false", "--max_redirects", "3"};
+        args = new String[]{"-quoa!", "--max_redirects", "3"};
         result = HttpsCheckerMain.doMain(args);
         assertNotNull(args);
         assertEquals(Result.result(Cli.Retcodes.INVALID_ARGS).retcode(), result.retcode());
