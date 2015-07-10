@@ -1,0 +1,8 @@
+Package: [[artifactId]]
+Version: [[version]]
+Section: misc
+Priority: optional
+Architecture: all
+Depends: openjdk-7-jre
+Description: [[name]] - [[description]]
+Maintainer: Krzysztof Suszynski <krzysztof.suszynski@wavesoftware.pl>

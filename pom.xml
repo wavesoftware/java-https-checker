@@ -6,8 +6,8 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-    <groupId>pl.wavesoftware.utils</groupId>
-    <artifactId>https-checker</artifactId>
+    <groupId>pl.wavesoftware</groupId>
+    <artifactId>jhttps-checker</artifactId>
     <version>0.8.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 	
@@ -19,6 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+        <jar.w.dependencies>jar-with-dependencies</jar.w.dependencies>
     </properties>
     
     <dependencies>
@@ -96,11 +97,71 @@
                     </archive>
 
                     <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                        <descriptorRef>${jar.w.dependencies}</descriptorRef>
                     </descriptorRefs>
 
                 </configuration>
             </plugin> 
+            
+            <plugin>
+                <artifactId>jdeb</artifactId>
+                <groupId>org.vafer</groupId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jdeb</goal>
+                        </goals>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <snapshotExpand>true</snapshotExpand>
+                            <!-- expand "SNAPSHOT" to what is in the "USER" env variable -->
+                            <snapshotEnv>USER</snapshotEnv>
+                            <verbose>true</verbose>
+                            <controlDir>${basedir}/src/deb/control</controlDir>
+                            <dataSet>
+
+                                <data>
+                                    <src>${project.build.directory}/${project.build.finalName}-${jar.w.dependencies}.jar</src>
+                                    <dst>${project.artifactId}.jar</dst>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/usr/share/wavesoftware/lib</prefix>
+                                        <user>loader</user>
+                                        <group>loader</group>
+                                    </mapper>
+                                </data>
+                                
+                                <data>
+                                    <src>${basedir}/src/deb/bin/${project.artifactId}</src>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/usr/bin</prefix>
+                                        <user>loader</user>
+                                        <group>loader</group>
+                                        <filemode>755</filemode>
+                                    </mapper>
+                                </data>
+
+                                <data>
+                                    <src>${basedir}/src/deb/init.d</src>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/etc/init.d</prefix>
+                                        <user>loader</user>
+                                        <group>loader</group>
+                                    </mapper>
+                                </data>
+
+                            </dataSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         
     </build>
