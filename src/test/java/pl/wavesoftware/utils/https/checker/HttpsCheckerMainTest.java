@@ -49,6 +49,26 @@ public class HttpsCheckerMainTest {
         result = HttpsCheckerMain.doMain(args);
         assertNotNull(args);
         assertEquals(Result.result(Cli.Retcodes.INVALID_ARGS).retcode(), result.retcode());
+
+        args = new String[]{"httttp://invalid.addres.com/quoa"};
+        result = HttpsCheckerMain.doMain(args);
+        assertNotNull(args);
+        assertEquals(Result.result(Cli.Retcodes.INVALID_ARGS).retcode(), result.retcode());
+
+        args = new String[]{"https://invalid.addres.org/quoa"};
+        result = HttpsCheckerMain.doMain(args);
+        assertNotNull(args);
+        assertEquals(Result.result(Cli.Retcodes.NO_CONNECTION).retcode(), result.retcode());
+
+        args = new String[]{"https://www.google.pl/no-a-file-to-download.txt"};
+        result = HttpsCheckerMain.doMain(args);
+        assertNotNull(args);
+        assertEquals(Result.result(Cli.Retcodes.NO_CONNECTION).retcode(), result.retcode());
+
+        args = new String[]{"https://tv.eurosport.com/"};
+        result = HttpsCheckerMain.doMain(args);
+        assertNotNull(args);
+        assertEquals(Result.result(Cli.Retcodes.BAD_SSL).retcode(), result.retcode());
     }
 
 }

@@ -24,6 +24,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+import javax.net.ssl.SSLException;
 import pl.wavesoftware.utils.https.checker.cli.Application;
 import pl.wavesoftware.utils.https.checker.cli.Cli.Arguments;
 import pl.wavesoftware.utils.https.checker.cli.Cli.Retcodes;
@@ -53,14 +54,14 @@ public abstract class MainApplication implements Application {
             io.out("Response OK?: " + response.isSuccessful());
             io.out("------");
             printHeaders(io, response);
-            if (response.isSuccessful()) {
-                result = Result.result(Retcodes.OK);
-            } else {
-                result = Result.result(Retcodes.BAD_SSL);
-            }
+            result = Result.result(Retcodes.OK);
+
         } catch (MalformedURLException ex) {
             io.exception(ex);
             result = Result.result(Retcodes.INVALID_ARGS);
+        } catch (SSLException ex) {
+            io.exception(ex);
+            result = Result.result(Retcodes.BAD_SSL);
         } catch (IOException ex) {
             io.exception(ex);
             result = Result.result(Retcodes.NO_CONNECTION);

@@ -7,9 +7,10 @@ HTTP/S Java Checker - It can check is your Java installation can perform connect
 ## Debian/Ubuntu
 
 ```bash
-dpkg -i jhttps-checker_0.8.0.deb
-jhttps-checker --help
-usage: jhttps-checker [-h] [-q QUIET] [-r MAX_REDIRECTS] address
+$ wget -O jhttps-checker_0.8.0.deb http://search.maven.org/remotecontent?filepath=pl/wavesoftware/jhttps-checker/0.8.0/jhttps-checker-0.8.0.deb
+$ sudo dpkg -i jhttps-checker-0.8.0.deb
+$ jhttps-checker --help
+usage: jhttps-checker [-h] [-q] [-r MAX_REDIRECTS] address
 
 It can check is your Java installation can perform connection with given HTTPS address
 
@@ -18,8 +19,7 @@ positional arguments:
 
 optional arguments:
   -h, --help             show this help message and exit
-  -q QUIET, --quiet QUIET
-                         Do not display anything, only retcodes (default: false)
+  -q, --quiet            Do not display anything, only retcodes (default: false)
   -r MAX_REDIRECTS, --max_redirects MAX_REDIRECTS
                          Number of redirects to perform at maximum (default: 10)
 ```
