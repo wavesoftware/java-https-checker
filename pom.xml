@@ -11,7 +11,7 @@
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 	
-    <name>HTTPS Java Checker</name>
+    <name>HTTP/S Java Checker</name>
     <description>It can check is your Java installation can perform connection with given HTTPS address</description>
     <url>https://github.com/wavesoftware/java-https-checker</url>
     
