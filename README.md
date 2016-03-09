@@ -8,7 +8,7 @@ HTTP/S Java Checker - It can check is your Java installation can perform connect
 
 ```bash
 $ wget -O jhttps-checker_0.8.0_all.deb https://github.com/wavesoftware/java-https-checker/releases/download/v0.8.0/jhttps-checker_0.8.0_all.deb
-$ sudo dpkg -i jhttps-checker-0.8.0_all.deb
+$ sudo dpkg -i jhttps-checker_0.8.0_all.deb || sudo apt-get install -f
 $ jhttps-checker --help
 usage: jhttps-checker [-h] [-q] [-r MAX_REDIRECTS] address
 
