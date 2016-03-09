@@ -4,11 +4,39 @@
 
 HTTP/S Java Checker - It can check is your Java installation can perform connection with given HTTPS address
 
-## Debian/Ubuntu
+## Installation on Debian/Ubuntu
 
 ```bash
 $ wget -O jhttps-checker_0.8.0_all.deb https://github.com/wavesoftware/java-https-checker/releases/download/v0.8.0/jhttps-checker_0.8.0_all.deb
 $ sudo dpkg -i jhttps-checker_0.8.0_all.deb || sudo apt-get install -f
+```
+
+## Usage
+
+```bash
+$ jhttps-checker https://sonar.wavesoftware.pl/
+Request URL: https://sonar.wavesoftware.pl/
+------
+Response OK?: true
+------
+HTTP/1.1 200 OK
+X-Runtime: 449
+ETag: "d3d61c144eacacfd6a426b23200868b3"
+Content-Length: 20125
+X-XSS-Protection: 1; mode=block
+Connection: keep-alive
+Server: nginx/1.4.6 (Ubuntu)
+X-Content-Type-Options: nosniff
+Cache-Control: private, max-age=0, must-revalidate
+X-Frame-Options: SAMEORIGIN
+Date: Wed, 09 Mar 2016 20:23:14 GMT
+Vary: Accept-Encoding
+Content-Type: text/html;charset=utf-8
+
+$ jhttps-checker https://api.sandbox.paypal.com/
+Request URL: https://api.sandbox.paypal.com/
+javax.net.ssl.SSLHandshake: Received fatal alert: handshake_failure
+
 $ jhttps-checker --help
 usage: jhttps-checker [-h] [-q] [-r MAX_REDIRECTS] address
 
@@ -24,7 +52,7 @@ optional arguments:
                          Number of redirects to perform at maximum (default: 10)
 ```
 
-## Maven
+## as Maven dependency
 
 ```xml
 <dependency>
