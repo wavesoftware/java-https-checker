@@ -15,7 +15,6 @@
  */
 package pl.wavesoftware.utils.https.checker.logic;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -34,20 +33,6 @@ public interface UrlFetcher {
     interface HttpResponse {
 
         /**
-         * Body of the response
-         *
-         * @return a body as stream
-         */
-        InputStream getBody();
-
-        /**
-         * Gets content length
-         *
-         * @return length of body content
-         */
-        Long getContentLength();
-
-        /**
          * Headers for the response
          *
          * @return HTTP headers for response
@@ -60,13 +45,6 @@ public interface UrlFetcher {
          * @return short numeric status ex.: 200
          */
         short getStatus();
-
-        /**
-         * Status message
-         *
-         * @return Status message for ex.: OK
-         */
-        String getStatusMessage();
 
         /**
          * Checks if response was successful

@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Map;
 import javax.net.ssl.SSLException;
@@ -38,12 +39,10 @@ import pl.wavesoftware.utils.https.checker.logic.UrlFetcher.HttpResponse;
  */
 public abstract class MainApplication implements Application {
 
-    private IO io;
-
     @Override
     public Result perform(ProcessIO pio) {
         Boolean quiet = getParams().get(Arguments.QUIET);
-        io = new IO(pio, quiet);
+        IO io = new IO(pio, quiet);
         String address = getParams().get(Arguments.ADDRESS);
         io.out("Request URL: " + address);
         Result result;
@@ -64,24 +63,26 @@ public abstract class MainApplication implements Application {
             result = Result.result(Retcodes.BAD_SSL);
         } catch (IOException ex) {
             io.exception(ex);
-            result = Result.result(Retcodes.NO_CONNECTION);
+            result = ex.getCause() instanceof CertificateException ?
+                    Result.result(Retcodes.BAD_SSL) :
+                    Result.result(Retcodes.NO_CONNECTION);
         }
         return result;
     }
 
-    private HttpResponse get(String address) throws MalformedURLException, IOException {
+    private HttpResponse get(String address) throws IOException {
         Short redirects = getParams().get(Arguments.MAX_REDIRECTS);
         return get(address, redirects);
     }
 
-    private HttpResponse get(String address, short redirects) throws MalformedURLException, IOException {
+    private HttpResponse get(String address, short redirects) throws IOException {
         URL url = new URL(address);
         URLConnection conn = url.openConnection();
         conn.setConnectTimeout(15000);
         conn.setDoInput(true);
         conn.connect();
         Map<String, List<String>> headers = conn.getHeaderFields();
-        long length = conn.getContentLengthLong();
+        long length = conn.getContentLength();
         InputStream body = conn.getInputStream();
         return new HttpResponseImpl(headers, length, body);
     }
@@ -115,16 +116,6 @@ public abstract class MainApplication implements Application {
         }
 
         @Override
-        public InputStream getBody() {
-            return body;
-        }
-
-        @Override
-        public Long getContentLength() {
-            return contentLenght;
-        }
-
-        @Override
         public Map<String, List<String>> getHeaders() {
             return headers;
         }
@@ -138,11 +129,6 @@ public abstract class MainApplication implements Application {
         public short getStatus() {
             String middle = getStatusLine().split(" ")[1];
             return Short.parseShort(middle);
-        }
-
-        @Override
-        public String getStatusMessage() {
-            return getStatusLine().split(" ")[2];
         }
 
         @Override
@@ -167,13 +153,13 @@ public abstract class MainApplication implements Application {
         }
 
         public void out(String message) {
-            if (quiet == false) {
+            if (!quiet) {
                 pio.getOut().println(message);
             }
         }
 
         public void err(String message) {
-            if (quiet == false) {
+            if (!quiet) {
                 pio.getErr().println(message);
             }
         }

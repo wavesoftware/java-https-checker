@@ -16,59 +16,76 @@
 package pl.wavesoftware.utils.https.checker;
 
 import static org.junit.Assert.*;
+
+import com.google.common.base.Joiner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import pl.wavesoftware.utils.https.checker.cli.Cli;
 import pl.wavesoftware.utils.https.checker.cli.Result;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
- *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
+@RunWith(Parameterized.class)
 public class HttpsCheckerMainTest {
 
     private static final String GOOGLE = "https://www.google.pl/";
 
+    @Parameterized.Parameters(name = "{0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{{
+                new Args(new String[]{GOOGLE}),
+                0
+        }, {
+                new Args(new String[]{"-q", GOOGLE}),
+                0
+        }, {
+                new Args(new String[]{"-quoa!", "--max_redirects", "3"}),
+                Result.result(Cli.Retcodes.INVALID_ARGS).retcode()
+        }, {
+                new Args(new String[]{"httttp://invalid.address.com/quoa"}),
+                Result.result(Cli.Retcodes.INVALID_ARGS).retcode()
+        }, {
+                new Args(new String[]{"https://invalid.address.org/quoa"}),
+                Result.result(Cli.Retcodes.NO_CONNECTION).retcode()
+        }, {
+                new Args(new String[]{"https://www.google.pl/no-a-file-to-download.txt"}),
+                Result.result(Cli.Retcodes.NO_CONNECTION).retcode()
+        }, {
+                new Args(new String[]{"https://wrong.host.badssl.com/"}),
+                Result.result(Cli.Retcodes.BAD_SSL).retcode()
+        }});
+    }
+
+    private final Args args;
+    private final int retcode;
+
+    public HttpsCheckerMainTest(Args args, int retcode) {
+        this.args = args;
+        this.retcode = retcode;
+    }
+
     @Test
     public void testDoMain() {
-        String[] args = new String[]{GOOGLE};
-        Result result = HttpsCheckerMain.doMain(args);
-        assertNotNull(args);
-        assertEquals(0, result.retcode());
+        Result result = HttpsCheckerMain.doMain(args.args);
+        assertEquals(retcode, result.retcode());
+    }
 
-        args = new String[]{"-q", GOOGLE};
-        result = HttpsCheckerMain.doMain(args);
-        assertNotNull(args);
-        assertEquals(0, result.retcode());
+    private static final class Args {
+        private final String[] args;
 
-        args = new String[]{"-q", "-r", "3", GOOGLE};
-        result = HttpsCheckerMain.doMain(args);
-        assertNotNull(args);
-        assertEquals(0, result.retcode());
+        private Args(String[] args) {
+            this.args = args;
+        }
 
-        args = new String[]{"-quoa!", "--max_redirects", "3"};
-        result = HttpsCheckerMain.doMain(args);
-        assertNotNull(args);
-        assertEquals(Result.result(Cli.Retcodes.INVALID_ARGS).retcode(), result.retcode());
-
-        args = new String[]{"httttp://invalid.addres.com/quoa"};
-        result = HttpsCheckerMain.doMain(args);
-        assertNotNull(args);
-        assertEquals(Result.result(Cli.Retcodes.INVALID_ARGS).retcode(), result.retcode());
-
-        args = new String[]{"https://invalid.addres.org/quoa"};
-        result = HttpsCheckerMain.doMain(args);
-        assertNotNull(args);
-        assertEquals(Result.result(Cli.Retcodes.NO_CONNECTION).retcode(), result.retcode());
-
-        args = new String[]{"https://www.google.pl/no-a-file-to-download.txt"};
-        result = HttpsCheckerMain.doMain(args);
-        assertNotNull(args);
-        assertEquals(Result.result(Cli.Retcodes.NO_CONNECTION).retcode(), result.retcode());
-
-        args = new String[]{"https://tv.eurosport.com/"};
-        result = HttpsCheckerMain.doMain(args);
-        assertNotNull(args);
-        assertEquals(Result.result(Cli.Retcodes.BAD_SSL).retcode(), result.retcode());
+        @Override
+        public String toString() {
+            return Joiner.on(" ").join(args);
+        }
     }
 
 }
